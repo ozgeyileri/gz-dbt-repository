@@ -3,11 +3,51 @@ version: 2
 sources:
   - name: raw
     schema: gz_raw_data
+    description: Greenweez ham e-ticaret veri kümesi
     tables:
       - name: sales
         identifier: raw_gz_sales_copy
+        description: Greenweez satış verileri. Her siparişteki (orders_id) her ürün (pdt_id) için bir satır bulunur.
+        columns:
+          - name: date_date
+            description: Satışın gerçekleştiği tarih.
+          - name: orders_id
+            description: Benzersiz sipariş numarası.
+          - name: pdt_id
+            description: Ürünün benzersiz numarası.
+          - name: revenue
+            description: Satıştan elde edilen toplam ciro.
+          - name: quantity
+            description: Satılan ürün adedi.
+          
+        tests:
+          - unique:
+              column_name: "orders_id || '-' || pdt_id"
+          - not_null:
+              column_name: "orders_id || '-' || pdt_id"
+
       - name: product
         identifier: raw_gz_product_copy
+        description: Greenweez ürün ve fiyat listesi verileri.
+        columns:
+          - name: products_id
+            description: Ürünün benzersiz numarası (Birincil Anahtar).
+            tests:
+              - unique
+              - not_null
+          - name: purchse_price
+            description: Ürünün ham alış fiyatı.
+
       - name: ship
         identifier: raw_gz_ship_copy
-
+        description: Greenweez kargo ve lojistik maliyet verileri.
+        columns:
+          - name: orders_id
+            description: Siparişin benzersiz numarası (Birincil Anahtar).
+            tests:
+              - unique
+              - not_null
+          - name: shipping_fee
+            description: Müşteriden tahsil edilen kargo ücreti.
+          - name: ship_cost
+            description: Şirkete yansıyan gerçek kargo maliyeti
