@@ -1,3 +1,6 @@
+
+-- Sizin mevcut SQL sorgunuz buradan itibaren devam etmeli
+
 with
 orders_operational as (
     select * from {{ ref('int_orders_operational') }}
